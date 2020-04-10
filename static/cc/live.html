@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+	<title>直播间</title>
+	<link rel="stylesheet" href="css/index-open.css">
+	<style type="text/css">
+        html, body {
+            height: 100%;
+            overflow-x: auto;
+        }
+
+        .chat-main {
+            background: #fff;
+        }
+
+        .document-main {
+            background: #000;
+        }
+
+        .video-middle {
+            left: 0;
+        }
+
+        .top1 {
+            top: 0;
+            right: 0;
+            left: auto;
+        }
+
+        /*打开的时候，chat-main高度为196*/
+        /*.chat-main{top: 196px;}*/
+    </style>
+
+    <style type="text/css">
+	.header-wrap {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        height: 64px;
+        font-size: 18px;
+        line-height: 64px;
+        color: #333;
+        overflow: hidden;
+        clear: both;
+        background: #fff;
+        box-shadow: 0 2px 3px #f0f0f0;
+    }
+    .header {
+    	width: 1216px;
+        margin: 0 auto;
+    }
+    .header .logo,
+    .header .class-info{
+        float: left;
+    }
+
+    .logo{
+        width:108px;
+        margin-left: 33px;
+        margin-right: 72px;
+    }
+    .logo img {
+    	display: block;
+        margin-top: 14px;
+    }
+   
+    .user-info {
+        width: 350px;
+        float: right;
+        text-align: right;
+        font-size: 16px;
+        padding-right: 20px;
+
+    }
+    .user-info a {
+    	color: #333;
+        display: inline-block;
+        margin-right: 40px;
+    }
+    .user-info a img {
+    	margin-right: 6px;
+    	vertical-align: text-bottom;
+    }
+    .user-info .logout {
+    	color: #ff6c00;
+        cursor: pointer;
+    }
+    .user-info .icon-vertical-line {
+    	display: inline-block;
+        width: 1px;
+        height: 63px;
+        margin: 0 10px;
+        background: url("images/icon-vertical-line.png") 0 0 no-repeat;
+        vertical-align: top;
+    }
+    </style>
+</head>
+<body>
+<div class="header-wrap">
+    <div class="header clearfix">
+        <span class="logo">
+            <img src="images/logo.png" alt="师训宝">
+        </span>
+        
+        <div class="user-info">
+            <a target="_blank" href="http://www.shixunbao.cn/help/index.html#/help/details?type=STUDENT" ><img src="images/icon-circle-ques.png" alt="">帮助中心</a>
+            <span class="userNameOpen">用户名</span>
+            <i class="icon-vertical-line"></i>
+            <span class="logout" id="logout">关闭</span>
+        </div>
+    </div>
+</div>
+<!-- middle start -->
+<div class="video-middle" id="video-middle">
+    <div class="video-m-top" id="doc-main" data-module="1">
+        <div class="document-main">
+            <div id="videoInteractions"></div>
+           <!--  <div id="audioInteractions" ></div>
+            <div class="call-box" id="videoInteraction" >
+                <div class="call-tit">视频通话申请中...</div>
+                <div class="btn-toggle"></div>
+                <video id="interactionLocalVideo" style="height: 100%; width: 100%;" autoplay></video>
+            </div> -->
+            <!-- 直播模块 -->
+            <div id="livePlayer"></div>
+            <!-- 直播文档模块 -->
+            <div id="drawPanel"></div>
+        </div>
+    </div>
+    <div class="l-m-b">
+        <div class="lmb-r">
+            <ul class="lmb-r-tools">
+                <li title="切换线路" class="c-line">
+                    <a href="javascript:void(0);" class="wl" id="btn-network" data-title="切换线路"></a>
+                </li>
+                
+                <li title="视频互动" name="interaction" t="video" class="disable" style="display: none;">
+                    <a href="javascript:void(0);" class="video" data-title="视频互动"></a>
+                </li>
+                <li title="语音互动" name="interaction" t="audio" class="disable" style="display: none;">
+                    <a href="javascript:void(0);" class="audio" data-title="语音互动"></a>
+                </li>
+                <span id="interactionMsg" style="padding-top: 5px; display: inline-block;"></span>
+            </ul>
+        </div>
+        <div class="lmb-r2">
+        	<div class="pnumd">
+                <i class="pnum"></i>
+                <span id="count">2</span>
+            </div>
+            <span class="fl mr5 userNameOpen"></span>
+            <!-- <a title="退出登录" href="javascript:void(0);" id="logout2" class="wl exit" data-title="退出"></a> -->
+        </div>
+    </div>
+</div>
+<!-- middle end -->
+<!-- right start -->
+<div class="video-right live-right" id="video-right">
+    <div id="right-bar" class="right-bar">
+        <span id="right-switch" class="bar-switch right-icons"></span>
+    </div>
+    <div class="chat-main">
+        <div class="chat-title">
+            <h2><i></i><span>公共聊天区</span></h2>
+            <div class="chat-people" id="chat-people"></div>
+            <div class="userlist" id="list-main">
+                <i class="curr"></i>
+                <h3 class="h6">在线用户(<em id="people-number"></em>)</h3>
+                <ul id="people-list">
+                </ul>
+            </div>
+        </div>
+        <div class="chat-list l-r-m">
+            <ul id="chat-list" class="chat-list l-r-m-list">
+            </ul>
+        </div>
+        <div class="chat-send">
+            <div class="chat-tips-scroll" id="chat-tips-scroll">有<em>0</em>条未读记录。</div>
+            <div class="chat-tools">
+
+                <div class="lrb-t">
+                    <div class="face" id="btn-face"></div>
+                    <div class="viewall" title="显示全部聊天信息" id="" ></div>
+                    <div class="o-t" id="isPrivateChat">
+                        对
+                        <span class="select-span">
+                                <span class="select-current" id="all">所有人</span>
+                                <em class="p-arrow"></em>
+                            </span>
+                        <ul id="private-name">
+                            <li id="all">所有人</li>
+                        </ul>
+                        说:
+                    </div>
+                </div>
+            </div>
+            <div class="chat-area">
+                <div class="chat-tips" id="chat-tips">
+                    <span class="arr"></span>
+                    <a href="javascript:;" class="tips-main">您现在感觉卡了吗？点这里</a>
+                    <a href="javascript:;" class="close-tips" id="close-tips">关闭提示</a>
+                </div>
+                <div class="lrb-b">
+                    <input class="chat-send-content" contenteditable="true" id="chat-content">
+                    <a href="javascript:;" class="btn btn-mini btn-chat" id="chat-submit">发送</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- right end -->
+
+
+<!-- 选择网络 -->
+<div class="public-layer" id="network">
+    <div class="layer-title">
+        <h2>选择网络</h2>
+        <span class="layer-close" id="work-close"></span>
+    </div>
+    <div class="layer-content">
+        <p>以下可以选择的网络途径:</p>
+        <ul class="change-network" id="change-network">
+            <li><input type="radio" value="0" name="network" id="network0" checked=""><label for="network0">主线路</label>
+            </li>
+            <li><input type="radio" value="1" name="network" id="network1"><label for="network1">备用线路</label></li>
+        </ul>
+        <div class="networks btns">
+            <input type="button" class="works-btn" id="btn-netsubmit" value="确定">
+            <input type="button" class="works-btn" id="btn-netcannel" value="取消">
+        </div>
+    </div>
+</div>
+<!-- 输入提示 -->
+<div class="input-tips" id="input-tips">
+    <i></i>
+
+    <p></p>
+
+    <div class="input-tips-cur"></div>
+</div>
+
+
+
+<input type="hidden" value="1" id="documentDisplayMode">
+
+
+
+<!-- 例子的 -->
+<script src="js/jquery-1.9.0.min.js"></script>
+<script src="js/handlebars.js"></script>
+<script src="js/base.js"></script>
+<script src="js/common.js"></script>
+<script src="https://image.csslcloud.net/js/dpc.js"></script>
+<script src="https://view.csslcloud.net/js/liveSDK.js?v=201809111416"></script>
+<script src="js/ui.js"></script>
+<script src="js/live.js"></script>
+<script src="js/module/cc.questionnaire.js"></script>
+<script type="text/javascript">
+	
+
+	// 退出当前直播
+    $("#logout").click(function () {
+    	DWLive.logout();
+
+    	open(location, '_self').close();
+    	window.opener=null;
+		window.open('','_self');
+		window.close();
+
+	})
+	// 获取参数
+    var wroomId = getQueryString('roomId'),
+    	wusername = getQueryString('loginUserName');
+
+    // 设置用户名
+    $(".userNameOpen").text(wusername);
+
+
+    DWLive.onLiveTime = function (e) {
+        console.log('onLiveTime', e);
+    };
+
+    var marquee;
+    DWLive.getMarquee = function (data) {
+        console.log(data);
+        marquee = data;
+    };
+
+    window.on_cc_swf_loading_completed = function () {
+        setTimeout(function () {
+            DWLive.showMarqueeDoc(marquee);
+        }, 1000);
+    };
+
+     // 直播SDK参数配置
+    DWLive.init({
+        userid: "87507F61AF96530B",
+        roomid: wroomId,
+        viewername: wusername,
+        viewertoken: 'password',
+        viewercustomua: 'web',
+        language: 'zh',
+        viewercustominfo: '',
+        fastMode: true
+    });
+</script>
+</body>
+</html>

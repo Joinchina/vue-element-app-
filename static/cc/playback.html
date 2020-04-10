@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit"/>
+	<title>回播页面</title>
+	<link rel="stylesheet" href="css/index-open2.css">
+	<style type="text/css">
+        html, body {
+            height: 100%;
+            overflow-x: auto;
+        }
+
+        .chat-main, .document-main {
+            background: #fff;
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                width: 1200px;
+                margin: 0 auto;
+                position: relative;
+                background: #ddd;
+                box-shadow: 0 0 10px 2px #ccc;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            body {
+                width: 1400px;
+                margin: 0 auto;
+                position: relative;
+                background: #ddd;
+                box-shadow: 0 0 10px 2px #ccc;
+            }
+        }
+
+        /* callback add*/
+        .live-right .l-r-m, .question-main {
+            bottom: 0
+        }
+
+        /**/
+        #callbackPanel, #callbackPanel img, #playbackPlayer, #playbackPanel {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style type="text/css">
+	.header-wrap {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        height: 64px;
+        font-size: 18px;
+        line-height: 64px;
+        color: #333;
+        overflow: hidden;
+        clear: both;
+        background: #fff;
+        box-shadow: 0 2px 3px #f0f0f0;
+    }
+    .header {
+    	width: 1216px;
+        margin: 0 auto;
+    }
+    .header .logo,
+    .header .class-info{
+        float: left;
+    }
+
+    .logo{
+        width:108px;
+        margin-left: 33px;
+        margin-right: 72px;
+    }
+    .logo img {
+    	display: block;
+        margin-top: 14px;
+    }
+   
+    .user-info {
+        width: 350px;
+        float: right;
+        text-align: right;
+        font-size: 16px;
+        padding-right: 20px;
+
+    }
+    .user-info a {
+    	color: #333;
+        display: inline-block;
+        margin-right: 40px;
+    }
+    .user-info a img {
+    	margin-right: 6px;
+    	vertical-align: text-bottom;
+    }
+    .user-info .logout {
+    	color: #ff6c00;
+        cursor: pointer;
+    }
+    .user-info .icon-vertical-line {
+    	display: inline-block;
+        width: 1px;
+        height: 63px;
+        margin: 0 10px;
+        background: url("images/icon-vertical-line.png") 0 0 no-repeat;
+        vertical-align: top;
+    }
+    </style>
+</head>
+<body>
+<div class="header-wrap">
+    <div class="header clearfix">
+        <span class="logo">
+            <img src="images/logo.png" alt="师训宝">
+        </span>
+        
+       
+ 
+        <div class="user-info">
+            <a target="_blank" href="http://www.shixunbao.cn/help/index.html#/help/details?type=STUDENT" ><img src="images/icon-circle-ques.png" alt="">帮助中心</a>
+            <span id="userName">用户名</span>
+            <i class="icon-vertical-line"></i>
+            <span class="logout" id="logout">关闭</span>
+        </div>
+
+
+    </div>
+</div>
+<!-- middle start -->
+<div class="video-middle" id="video-middle">
+    <div class="video-m-top" id="doc-main" data-module="1">
+        <div class="document-main">
+			<!-- 回放视频模块 -->
+            <div id="playbackPlayer"></div>
+            <!-- 回放文档模块 -->
+            <div id="playbackPanel"></div>
+
+        </div>
+    </div>
+    <div class="l-m-b">
+        <div class="progress-box" id="progress-box">
+            <div class="background" id="background"></div>
+            <div class="buffer" id="buffer"></div>
+            <div class="progress" id="progress"></div>
+            <span class="dot" id="dot"></span>
+        </div>
+        <div class="controls">
+            <div class="left">
+                <div class="play">
+                    <a href="javascript:void(0);" class="btn-play" title="播放" id="btn-play"></a>
+                </div>
+                <div class="time">
+                    <span>00:00</span>/<span>00:00</span>
+                </div>
+                <div class="volume">
+                    <a href="javascript:void(0);" class="btn-volume" title="静音" id="btn-volume"></a>
+                </div>
+                <div class="volume-slider" id="volume-slider">
+                    <div class="v-progress" id="v-progress"></div>
+                    <div class="v-dot" id="v-dot"></div>
+                </div>
+            </div>
+            <div class="right">
+                <ul class="tools">
+                    <li class="rate" id="rate">
+                        <a href="javascript:void(0);" title="倍速" class="btn-rate" id="btn-rate">正常</a>
+                    </li>
+                    <!-- <li class="switch">
+                        <a href="javascript:void(0);" title="切换窗口" class="btn-switch" id="btn-switch"></a>
+                    </li> -->
+                    <li class="fullscreen">
+                        <a href="javascript:void(0);" title="网页全屏" class="btn-fullscreen" id="btn-fullscreen"></a>
+                    </li>
+                </ul>
+                <ul class="select" id="select">
+                    <li value="0"><a href="#">0.8X</a></li>
+                    <li value="1"><a href="#">正常</a></li>
+                    <li value="2"><a href="#">1.25X</a></li>
+                    <li value="3"><a href="#">1.5X</a></li>
+                    <li value="4"><a href="#">2.0X</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- middle end -->
+
+<!-- right start -->
+<div class="video-right live-right" id="video-right">
+    <div id="right-bar" class="right-bar">
+        <span id="right-switch" class="bar-switch right-icons"></span>
+    </div>
+    <div class="chat-main">
+        <div class="chat-title">
+            <h2><i></i><span>公共聊天区</span></h2>
+        </div>
+        <div class="chat-list l-r-m">
+            <ul id="chat-list" class="chat-list l-r-m-list" style="top: 0px;">
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- right end -->
+
+<input id="initParam" type="hidden" value=""/>
+<!-- 聊天模板 -->
+<script id="chatMsgTemplate" type="text/x-handlebars-template">
+    <li {{#if isFromMe}}class="me" {{/if}}>
+    <div class="peo-infos">
+        <p class="peo-names">
+            <span class="p-n-names">{{name}}</span>
+            <i class="peo-icons "></i>
+        </p>
+    </div>
+    <div class="peo-chat">
+        <i class="icons"></i>
+
+        <p class="chat-content">{{{content}}}</p>
+    </div>
+    </li>
+</script>
+
+<!-- 私聊 -->
+<script id="privateChatMsgTemplate" type="text/x-handlebars-template">
+    <li {{#if isFromMe}}class="me" {{/if}}>
+    <div class="peo-infos">
+        <p class="peo-names">
+            <span class="p-n-names pchat">{{fromUserName}}&nbsp;对&nbsp;{{toUserName}}&nbsp;说</span>
+            <i class="peo-icons "></i>
+        </p>
+    </div>
+    <div class="peo-chat">
+        <i class="icons"></i>
+
+        <p class="chat-content">{{{content}}}</p>
+    </div>
+    </li>
+</script>
+
+<input type="hidden" value="1" id="documentDisplayMode">
+<script src="js/jquery-1.9.0.min.js"></script>
+<script src="js/handlebars.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/common.js"></script>
+<script src="js/jquery.jslider.js"></script>
+<script src="//image.csslcloud.net/js/dpc.js"></script>
+<script src="//view.csslcloud.net/js/playbackSDK.js?v=20181009"></script>
+<script src="js/ui.js"></script>
+<script src="js/callback.pc.extend.js"></script>
+
+<script type="text/javascript">
+	
+    // 退出当前直播
+    $("#logout").click(function () {
+        $.DW.logout();
+    	open(location, '_self').close();
+    	window.opener=null;
+		window.open('','_self');
+		window.close();
+	})
+	// 获取参数
+    var wroomId = getQueryString('roomId'),
+    	wrecordId = getQueryString('recordId'),
+    	wusername = getQueryString('loginUserName');
+
+    // 设置用户名
+    $("#userName").html(wusername);
+
+    // 视频为主
+    if ($('#initParam').val() == 1) {
+    	console.log('btn-switch');
+        // $('#btn-switch').click();
+    }
+
+    //flash播放器隐藏倍速功能
+    var isH5play = true;
+    if (!isH5play) {
+        $('#rate').css('display', 'none');
+    }
+
+    $.DW.isShowBar(1);  // 隐藏视频控制条
+
+    $.DW.config({
+        userId: '87507F61AF96530B',
+        roomId: wroomId,
+        recordId: wrecordId,
+        viewername: wusername,
+        viewertoken: '123',
+        isH5play: true,
+        fastMode: true
+    });
+
+</script>
+
+</body>
+</html>
